@@ -1,0 +1,36 @@
+import re
+
+# Dictionary of patterns and responses
+patterns_responses = {
+    r'hello|hi|hey': ["Hi there!", "Hello!", "Hey!"],
+    r'how are you\??': ["I'm good, thank you!", "I'm doing well, thanks for asking."],
+    r'weather': ["I'm sorry, I can't provide weather information."],
+    r'recommendation': ["Sure, I can help with recommendations. What are you looking for?"],
+    r'bye|goodbye': ["Goodbye!", "See you later!", "Have a great day!"],
+    r'(\w+)\s*(?:in|at)?\s*(\w+)\s*\??': ["Tell me more about {1} in {2}.", "What do you want to know about {1} in {2}?"],
+    r'(\w+)\s*like\s*(\w+)': ["It's great that you like {2}!"],
+    r'thanks|thank you': ["You're welcome!", "No problem!"],
+    r'sorry|apologies': ["No worries!", "It's okay."],
+    r'.*': ["I'm sorry, I didn't quite understand that."],
+}
+
+def chatbot_response(user_input):
+    # Iterate through patterns_responses and find a match
+    for pattern, responses in patterns_responses.items():
+        match = re.match(pattern, user_input.lower())
+        if match:
+            response = responses[0]  # Select the first response for simplicity
+            placeholders = match.groups()  # Extract groups captured by regex
+            # Replace placeholders in the response
+            for i, placeholder in enumerate(placeholders):
+                response = response.replace(f"{{{i}}}", placeholder)
+            return response
+
+# Example usage
+print("Chatbot: Hi! How can I assist you today?")
+while True:
+    user_input = input("User: ")
+    if user_input.lower() == 'exit':
+        break
+    response = chatbot_response(user_input)
+    print("Chatbot:", response)
